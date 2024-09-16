@@ -1,10 +1,14 @@
 package com.kiranaservices.kirana_transactions.dto;
 
 import com.kiranaservices.kirana_transactions.enums.TransactionType;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Currency;
 import java.util.Date;
 
+@Getter
+@Setter
 public class TransactionDTO {
     private String txnId;
     private Integer txnAmount;
