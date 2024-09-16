@@ -23,7 +23,7 @@ public class ReportService implements IReportService {
 
     @Override
     public Report getReportOnPeriod(String userId, TransactionType txnType, String period) {
-        List<Transaction> transactions = reportRepository.findByUserIdAndTxnType(userId, txnType.name());
+        List<Transaction> transactions = reportRepository.findByUserIdAndTxnType(userId, TransactionType.valueOf(txnType.name()));
         ReportDTO reportDTO = createReportDTO(transactions);
 
         return convertToReport(reportDTO);

@@ -1,27 +1,58 @@
 package com.kiranaservices.kirana_transactions.service;
 
+import com.kiranaservices.kirana_transactions.dto.UserDTO;
 import com.kiranaservices.kirana_transactions.model.User;
+import com.kiranaservices.kirana_transactions.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements IUserService{
-    @Override
-    public User createUser(User user) {
-        return null;
+public class UserService implements IUserService {
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public User updateUser(User user) {
-        return null;
+    public User createUser(UserDTO userDTO) {
+        User user = new User();
+        user.setUserId(userDTO.getUserId());
+        user.setUserName(userDTO.getUserName());
+        user.setEmail(userDTO.getEmail());
+        user.setMobileNumber(userDTO.getMobileNumber());
+        user.setPassword(userDTO.getPassword());
+        user.setStoreName(userDTO.getStoreName());
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(UserDTO userDTO) {
+        User user = userRepository.findByUserId(userDTO.getUserId());
+        if (user != null) {
+            user.setUserName(userDTO.getUserName());
+            user.setEmail(userDTO.getEmail());
+            user.setMobileNumber(userDTO.getMobileNumber());
+            user.setPassword(userDTO.getPassword());
+            user.setStoreName(userDTO.getStoreName());
+            return userRepository.save(user);
+        }
+        return null; // or throw an exception
     }
 
     @Override
     public User deleteUserByUserId(String userId) {
-        return null;
+        User user = userRepository.findByUserId(userId);
+        if (user != null) {
+            userRepository.delete(user);
+            return user;
+        }
+        return null; // or throw an exception
     }
 
     @Override
-    public User getUserByUserId(String userId){
-        return null;
+    public User getUserByUserId(String userId) {
+        return userRepository.findByUserId(userId);
     }
 }

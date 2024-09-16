@@ -1,43 +1,38 @@
 package com.kiranaservices.kirana_transactions.controller;
 
+import com.kiranaservices.kirana_transactions.dto.UserDTO;
 import com.kiranaservices.kirana_transactions.model.User;
-import com.kiranaservices.kirana_transactions.service.UserService;
+import com.kiranaservices.kirana_transactions.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    private final UserService userService;
+    private final IUserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(IUserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/create")
-    public User createUser(@RequestBody User user){
-        User createdUser = userService.createUser(user);
-        return createdUser;
+    public User createUser(@RequestBody UserDTO userDTO) {
+        return userService.createUser(userDTO);
     }
 
-    @GetMapping("/get/:id")
-    public User getUser(@RequestParam String userId){
-        User user = userService.getUserByUserId(userId);
-        return user;
+    @GetMapping("/get/{userId}")
+    public User getUser(@PathVariable String userId) {
+        return userService.getUserByUserId(userId);
     }
 
     @PatchMapping("/update")
-    public User updateUser(@RequestBody User user){
-        User updatedUser = userService.updateUser(user);
-        return updatedUser;
+    public User updateUser(@RequestBody UserDTO userDTO) {
+        return userService.updateUser(userDTO);
     }
 
-    @DeleteMapping("/delete/:id")
-    public User deleteUserByUserId(@RequestParam String userId){
-        User deletedUser = userService.deleteUserByUserId(userId);
-        return deletedUser;
+    @DeleteMapping("/delete/{userId}")
+    public User deleteUserByUserId(@PathVariable String userId) {
+        return userService.deleteUserByUserId(userId);
     }
-
 }
