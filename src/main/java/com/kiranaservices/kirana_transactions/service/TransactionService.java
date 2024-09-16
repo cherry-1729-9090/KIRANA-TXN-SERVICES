@@ -12,17 +12,25 @@ import java.util.List;
 public class TransactionService implements ITransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final CurrencyConversionService currencyConversionService;
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository, CurrencyConversionService currencyConversionService) {
         this.transactionRepository = transactionRepository;
+        this.currencyConversionService = currencyConversionService;
     }
 
     @Override
     public Transaction createTransaction(TransactionDTO txnDTO) {
         Transaction txn = new Transaction();
         txn.setTxnId(txnDTO.getTxnId());
-        txn.setTxnAmount(txnDTO.getTxnAmount());
+
+        // If the currency is not INR, convert the amount to INR
+        double convertedAmount = txnDTO.getCurrencyType().getCurrencyCode().equals("INR")
+                ? txnDTO.getTxnAmount()
+                : currencyConversionService.convertToINR(txnDTO.getCurrencyType().getCurrencyCode(), txnDTO.getTxnAmount());
+
+        txn.setTxnAmount((int) convertedAmount);
         txn.setTxnDate(txnDTO.getTxnDate());
         txn.setCurrencyType(txnDTO.getCurrencyType());
         txn.setUserId(txnDTO.getUserId());
