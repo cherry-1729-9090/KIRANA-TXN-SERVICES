@@ -35,4 +35,10 @@ public class UserController {
     public User deleteUserByUserId(@PathVariable String userId) {
         return userService.deleteUserByUserId(userId);
     }
+
+    @GetMapping("/hello")
+    public String sayHello(){
+        System.out.println("Hello from User Controller");
+        return "Hello from user controller";
+    }
 }
