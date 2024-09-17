@@ -1,6 +1,8 @@
 package com.kiranaservices.kirana_transactions.service;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,14 +20,28 @@ public class CurrencyConversionService {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> response = restTemplate.getForObject(API_URL, Map.class);
         Map<String, Double> rates = new HashMap<>();
-        ((Map<String, Number>) response.get("rates")).forEach((key, value) -> rates.put(key, value.doubleValue()));
+
+        if (response != null && response.containsKey("rates")) {
+            Map<String, Number> rateMap = (Map<String, Number>) response.get("rates");
+            rateMap.forEach((key, value) -> rates.put(key, value.doubleValue()));
+        }
+
         return rates;
     }
 
-
     public double convertToINR(String currency, double amount) {
         Map<String, Double> rates = getConversionRates();
-        double conversionRate = rates.getOrDefault(currency, 1.0); // Use 1.0 for INR as it's the base
-        return amount * conversionRate / rates.get("INR");
+        double conversionRate = rates.getOrDefault(currency, 1.0); // Default to 1.0 if currency not found
+        double inrRate = rates.getOrDefault("INR", 1.0); // Fetch INR conversion rate
+
+        return (amount * conversionRate) / inrRate;
+    }
+
+    // Schedule cache eviction every hour (3600000 ms)
+    @Scheduled(fixedRate = 3600000) // Runs every 1 hour
+    @CacheEvict(value = "currencyRates", allEntries = true)
+    public void evictCurrencyCache() {
+        // This method will clear the cache every hour
+        System.out.println("Currency rates cache cleared!");
     }
 }

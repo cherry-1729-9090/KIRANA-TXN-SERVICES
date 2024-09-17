@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Configuration
 public class RateLimitingConfig {
 
-    // Store buckets for each IP address in a thread-safe map
     private final Map<String, Bucket> ipBuckets = new ConcurrentHashMap<>();
 
     @Bean
@@ -33,22 +32,21 @@ public class RateLimitingConfig {
 
                 String ipAddress = request.getRemoteAddr(); // Retrieve the client's IP address
 
-                // Fetch or create a rate limiting bucket for the IP
                 Bucket bucket = ipBuckets.computeIfAbsent(ipAddress, this::createNewBucket);
 
                 // Check if the bucket allows the request (rate limit)
                 if (bucket.tryConsume(1)) {
-                    filterChain.doFilter(request, response); // If allowed, process the request
+                    filterChain.doFilter(request, response);
                 } else {
-                    response.setStatus(429); // Return HTTP status code 429 (Too Many Requests)
+                    response.setStatus(429);
                     response.getWriter().write("Too Many Requests - Rate limit exceeded");
                 }
             }
 
-            // Define a bucket for rate limiting (e.g., 10 requests per minute)
             private Bucket createNewBucket(String ipAddress) {
-                Refill refill = Refill.intervally(10, Duration.ofMinutes(1)); // Refill 10 tokens every 1 minute
-                Bandwidth limit = Bandwidth.classic(10, refill); // Set the bandwidth limit to 10 requests/minute
+                Refill refill = Refill.intervally(10, Duration.ofMinutes(1));
+                // Refill 10 tokens every 1 minute
+                Bandwidth limit = Bandwidth.classic(10, refill);
                 return Bucket4j.builder().addLimit(limit).build(); // Build and return the bucket
             }
         };

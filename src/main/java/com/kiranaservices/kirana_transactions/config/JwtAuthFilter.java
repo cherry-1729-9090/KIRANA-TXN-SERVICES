@@ -41,12 +41,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         try {
-            String username = jwtUtil.validateToken(token);
-            // Log the validated username
-            System.out.println("Validated username: " + username);
+            String userEmail = jwtUtil.validateToken(token);
+
+            // Log the validated userEmail
+            System.out.println("Validated userEmail: " + userEmail);
+
             // Proceed with the request
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+
             // Log the exception
             System.err.println("Token validation failed: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

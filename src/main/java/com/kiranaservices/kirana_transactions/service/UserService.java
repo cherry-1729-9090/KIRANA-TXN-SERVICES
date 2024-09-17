@@ -19,7 +19,7 @@ public class UserService implements IUserService {
     public User createUser(UserDTO userDTO) {
         User existingUser = userRepository.findByEmail(userDTO.getEmail());
         if (existingUser != null) {
-            return null; // or throw an exception if you prefer
+            return null;
         }
 
         User user = new User();
@@ -43,7 +43,7 @@ public class UserService implements IUserService {
             user.setStoreName(userDTO.getStoreName());
             return userRepository.save(user);
         }
-        return null; // or throw an exception
+        return null;
     }
 
     @Override
@@ -67,6 +67,6 @@ public class UserService implements IUserService {
         if (user != null && user.getPassword().equals(password)) {
             return user;
         }
-        return null; // Return null if the user is not found or password is incorrect
+        return null;
     }
 }

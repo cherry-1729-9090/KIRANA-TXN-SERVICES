@@ -22,11 +22,14 @@ public class JwtUtil {
 
     public String validateToken(String token) {
         System.out.println("Request reached for validating the token.... in validateToken");
+
+        // log
         System.out.println(token);
+
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET.getBytes())).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         System.out.println("Decoded token giving the subject which is the userMail.....");
         System.out.println(decodedJWT.getSubject());
-        return decodedJWT.getSubject(); // Returns the username if valid
+        return decodedJWT.getSubject(); // Returns the userEmail if valid
     }
 }

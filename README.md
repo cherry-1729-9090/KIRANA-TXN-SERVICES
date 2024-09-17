@@ -32,6 +32,8 @@ The system allows store owners to:
 - Record transactions (both credit and debit).
 - Track and manage their store's transaction history.
 - Generate reports based on transaction history.
+- Generate the report of total Debit, total Credit and the total netflow within specific period.
+
 
 ---
 
@@ -41,7 +43,7 @@ The system allows store owners to:
 - **Transaction Management**: Record debit and credit transactions for users.
 - **JWT Authentication**: Secure every route using JWT (JSON Web Tokens).
 - **Rate Limiting**: Implement rate limiting for specific APIs to prevent abuse.
-- **Caching**: Optimize performance by caching frequently accessed data.
+- **Caching**: Optimize performance by caching currency conversion rates.
 - **RESTful APIs**: Expose RESTful endpoints for interaction with the system.
 - **Flexible Transaction Types**: Support for different types of transactions using ENUM.
 - **MongoDB Integration**: High-performance and scalable document database.
@@ -83,9 +85,12 @@ The system allows store owners to:
     ```
 
 3. **Configure MongoDB connection** in `application.properties`:
-    ```properties
-    spring.data.mongodb.uri=mongodb://localhost:27017/kirana_transactions
+   ```properties
+    spring.data.mongodb.uri=<Your MongoDB connection String>
     ```
+   - For testing purposes you can use the url `mongodb+srv://chitluridevicharan:charan@cluster0.qgrpql7.mongodb.net/KIRANA_TRANSACTIONS?retryWrites=true&w=majority&appName=Cluster0
+     `
+    
 
 4. **Run the application**:
     ```bash
@@ -109,6 +114,8 @@ src/
 │   │               ├── model/           # Model classes (User, Transaction)
 │   │               ├── repository/      # MongoDB repositories for data access
 │   │               ├── service/         # Business logic services
+│   │               ├── enum/            # Enums for the type of transactions.
+│   │               ├── util/            # JwtUTil for creating and verifying the auth Token.
 │   │               └── KiranaTransactionsApplication.java # Main entry point
 │   └── resources/
 │       ├── application.properties       # Application configuration
@@ -121,27 +128,6 @@ src/
 
 ## API Endpoints
 
-### Authentication Endpoints
-
-| Method | Endpoint        | Description               | Payload                  |
-|--------|-----------------|---------------------------|---------------------------|
-| POST   | `/auth/register` | Register a new user       | `{ "username", "password" }` |
-| POST   | `/auth/login`    | Login and generate JWT    | `{ "username", "password" }` |
-
-Upon successful login or registration, the response will contain a JWT token.
-
-### Transaction Endpoints
-
-| Method | Endpoint                | Description                          | Payload                           |
-|--------|-------------------------|--------------------------------------|-----------------------------------|
-| POST   | `/transactions/create`   | Create a new transaction             | `{ "userId", "amount", "txnType" }` |
-| GET    | `/transactions/{userId}` | Get transactions for a specific user | N/A                               |
-
-### Reporting Endpoints
-
-| Method | Endpoint                  | Description                        |
-|--------|---------------------------|------------------------------------|
-| GET    | `/reports/summary/{userId}`| Generate a transaction summary for a user |
 
 ### Postman Documentation
 
@@ -171,6 +157,8 @@ The `JwtAuthFilter` is implemented globally but can be applied to specific route
 
 The project integrates **Bucket4j** for rate limiting. This prevents abuse by limiting the number of requests to certain endpoints.
 
+Only 10 requests can be made per minute.
+
 You can customize the rate-limiting policy in the `AppConfig` class.
 
 ---
@@ -178,6 +166,8 @@ You can customize the rate-limiting policy in the `AppConfig` class.
 ## Caching
 
 To enhance performance, caching can be enabled for frequently accessed data, such as transaction reports.
+
+In here caching was implemented as to keep the currency conversion rates of different currency types, and the cache is refreshed for every 1 hour as the currency rates are volatile.
 
 Currently, the project uses **Spring Boot's Caching** abstraction for managing cache, which can be configured further based on requirements.
 
