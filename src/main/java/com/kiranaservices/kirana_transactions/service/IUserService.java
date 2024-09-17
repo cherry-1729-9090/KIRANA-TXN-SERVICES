@@ -8,4 +8,6 @@ public interface IUserService {
     User updateUser(UserDTO userDTO);
     User deleteUserByUserId(String userId);
     User getUserByUserId(String userId);
+    User getUserByEmailAndPassword(String email, String password);
+
 }

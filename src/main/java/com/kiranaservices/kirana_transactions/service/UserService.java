@@ -55,4 +55,14 @@ public class UserService implements IUserService {
     public User getUserByUserId(String userId) {
         return userRepository.findByUserId(userId);
     }
+
+    @Override
+    public User getUserByEmailAndPassword(String email, String password) {
+        User user = userRepository.findByEmailAndPassword(email, password);
+        if(user.getPassword().equals(password)){
+            return user;
+        }
+        return null;
+    }
+
 }
