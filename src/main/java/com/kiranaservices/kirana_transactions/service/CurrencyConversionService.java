@@ -37,11 +37,9 @@ public class CurrencyConversionService {
         return (amount * conversionRate) / inrRate;
     }
 
-    // Schedule cache eviction every hour (3600000 ms)
     @Scheduled(fixedRate = 3600000) // Runs every 1 hour
     @CacheEvict(value = "currencyRates", allEntries = true)
     public void evictCurrencyCache() {
-        // This method will clear the cache every hour
         System.out.println("Currency rates cache cleared!");
     }
 }
