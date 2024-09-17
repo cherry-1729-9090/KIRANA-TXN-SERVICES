@@ -17,6 +17,11 @@ public class UserService implements IUserService {
 
     @Override
     public User createUser(UserDTO userDTO) {
+        User existingUser = userRepository.findByEmail(userDTO.getEmail());
+        if (existingUser != null) {
+            return null; // or throw an exception if you prefer
+        }
+
         User user = new User();
         user.setUserId(userDTO.getUserId());
         user.setUserName(userDTO.getUserName());
@@ -58,11 +63,10 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserByEmailAndPassword(String email, String password) {
-        User user = userRepository.findByEmailAndPassword(email, password);
-        if(user.getPassword().equals(password)){
+        User user = userRepository.findByEmail(email);
+        if (user != null && user.getPassword().equals(password)) {
             return user;
         }
-        return null;
+        return null; // Return null if the user is not found or password is incorrect
     }
-
 }

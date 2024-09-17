@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final List<String> excludedPaths = Arrays.asList("/api/user/register", "/api/user/login");
+    private final List<String> excludedPaths = Arrays.asList("/api/user/register", "/api/user/login","/swagger-ui.html");
 
     @Autowired
     private JwtUtil jwtUtil;
