@@ -48,12 +48,13 @@ public class ReportService implements IReportService {
                 .toList());
 
         reportDTO.setTotalCreditAmount(reportDTO.getCreditTransactions().stream()
-                .mapToInt(Transaction::getTxnAmount)
+                .mapToDouble(Transaction::getTxnAmount)
                 .sum());
         reportDTO.setTotalDebitAmount(reportDTO.getDebitTransactions().stream()
-                .mapToInt(Transaction::getTxnAmount)
+                .mapToDouble(Transaction::getTxnAmount)
                 .sum());
         reportDTO.setNetFlow(reportDTO.getTotalCreditAmount() - reportDTO.getTotalDebitAmount());
+
 
         return reportDTO;
     }

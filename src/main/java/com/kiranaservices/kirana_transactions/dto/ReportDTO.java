@@ -11,7 +11,7 @@ import java.util.List;
 public class ReportDTO {
     private List<Transaction> creditTransactions;
     private List<Transaction> debitTransactions;
-    private Integer totalCreditAmount;
-    private Integer totalDebitAmount;
-    private Integer netFlow;
+    private Double totalCreditAmount;
+    private Double totalDebitAmount;
+    private Double netFlow;
 }

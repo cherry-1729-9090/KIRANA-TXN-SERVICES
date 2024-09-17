@@ -32,6 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization header: " + authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Missing or invalid Authorization header");
@@ -41,9 +42,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         try {
             String username = jwtUtil.validateToken(token);
-            // If token is valid, proceed with the request
+            // Log the validated username
+            System.out.println("Validated username: " + username);
+            // Proceed with the request
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            // Log the exception
+            System.err.println("Token validation failed: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid token");
         }

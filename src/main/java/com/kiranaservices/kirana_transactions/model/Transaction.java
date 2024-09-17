@@ -17,7 +17,7 @@ import java.util.Date;
 public class Transaction {
     @Id
     private String txnId;
-    private Integer txnAmount;
+    private Double txnAmount;
     private Date txnDate;
     private Currency currencyType;
     private String userId;

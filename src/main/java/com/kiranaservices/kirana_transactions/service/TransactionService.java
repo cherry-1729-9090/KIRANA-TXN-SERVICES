@@ -26,11 +26,12 @@ public class TransactionService implements ITransactionService {
         txn.setTxnId(txnDTO.getTxnId());
 
         // If the currency is not INR, convert the amount to INR
+        System.out.println(txnDTO);
         double convertedAmount = txnDTO.getCurrencyType().getCurrencyCode().equals("INR")
                 ? txnDTO.getTxnAmount()
                 : currencyConversionService.convertToINR(txnDTO.getCurrencyType().getCurrencyCode(), txnDTO.getTxnAmount());
 
-        txn.setTxnAmount((int) convertedAmount);
+        txn.setTxnAmount( convertedAmount);
         txn.setTxnDate(txnDTO.getTxnDate());
         txn.setCurrencyType(txnDTO.getCurrencyType());
         txn.setUserId(txnDTO.getUserId());

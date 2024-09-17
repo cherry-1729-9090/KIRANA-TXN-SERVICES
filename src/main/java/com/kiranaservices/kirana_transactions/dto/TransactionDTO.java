@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 public class TransactionDTO {
     private String txnId;
-    private Integer txnAmount;
+    private Double txnAmount;
     private Date txnDate;
     private Currency currencyType;
     private String userId;
