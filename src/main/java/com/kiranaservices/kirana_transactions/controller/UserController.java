@@ -38,11 +38,14 @@ public class UserController {
         // Generate a JWT token for the newly registered user
         String token = jwtUtil.generateToken(newUser.getEmail());
 
-        return ResponseEntity.ok("JWT Token: " + token);
+        // Create a response wrapper
+        RegistrationResponse response = new RegistrationResponse(newUser, token);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestParam String userName, @RequestParam String email,@RequestParam String password) {
+    public ResponseEntity<?> loginUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password) {
         User user = userService.getUserByEmailAndPassword(email, password);
         if (user != null) {
             return ResponseEntity.ok(user);
@@ -50,7 +53,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
-
 
     @GetMapping("/get/{userId}")
     public ResponseEntity<?> getUser(@PathVariable String userId) {
@@ -83,8 +85,35 @@ public class UserController {
     }
 
     @GetMapping("/hello")
-    public String sayHello(){
+    public String sayHello() {
         System.out.println("Hello from User Controller");
         return "Hello from user controller";
+    }
+
+    // Response wrapper class
+    public static class RegistrationResponse {
+        private User user;
+        private String jwtToken;
+
+        public RegistrationResponse(User user, String jwtToken) {
+            this.user = user;
+            this.jwtToken = jwtToken;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+        public String getJwtToken() {
+            return jwtToken;
+        }
+
+        public void setJwtToken(String jwtToken) {
+            this.jwtToken = jwtToken;
+        }
     }
 }

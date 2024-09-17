@@ -18,3 +18,4 @@ public class TransactionDTO {
     private TransactionType txnType;
     private String txnDetails;
 }
+
