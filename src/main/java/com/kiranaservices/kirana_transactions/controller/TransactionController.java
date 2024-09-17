@@ -30,7 +30,7 @@ public class TransactionController {
     }
 
     @GetMapping("/getAll")
-    public List<Transaction> getAllTransactions() {
-        return transactionService.getAllTransactions();
+    public List<Transaction> getAllTransactions(@RequestParam String userId) {
+        return transactionService.getAllTransactions(userId);
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 public interface ITransactionService {
     Transaction createTransaction(TransactionDTO txnDTO);
     Transaction getTransactionById(String txnId);
-    List<Transaction> getAllTransactions();
+    List<Transaction> getAllTransactions(String userId);
 }

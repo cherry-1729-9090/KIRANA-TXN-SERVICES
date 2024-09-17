@@ -31,7 +31,7 @@ public class TransactionService implements ITransactionService {
                 ? txnDTO.getTxnAmount()
                 : currencyConversionService.convertToINR(txnDTO.getCurrencyType().getCurrencyCode(), txnDTO.getTxnAmount());
 
-        txn.setTxnAmount( convertedAmount);
+        txn.setTxnAmount(convertedAmount);
         txn.setTxnDate(txnDTO.getTxnDate());
         txn.setCurrencyType(txnDTO.getCurrencyType());
         txn.setUserId(txnDTO.getUserId());
@@ -46,7 +46,7 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
+    public List<Transaction> getAllTransactions(String userId) {
+        return transactionRepository.findByUserId(userId);
     }
 }
