@@ -8,6 +8,7 @@ import com.kiranaservices.kirana_transactions.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,16 +23,22 @@ public class ReportService implements IReportService {
     }
 
     @Override
-    public Report getReportOnPeriod(String userId, TransactionType txnType, String period) {
-        List<Transaction> transactions = reportRepository.findByUserIdAndTxnType(userId, TransactionType.valueOf(txnType.name()));
-        ReportDTO reportDTO = createReportDTO(transactions);
+    public Report getReportOnPeriod(String userId, String period) {
+        List<Transaction> transactions;
 
+        transactions = reportRepository.findByUserId(userId);
+
+        ReportDTO reportDTO = createReportDTO(transactions);
         return convertToReport(reportDTO);
     }
 
     @Override
-    public Report getReportInDates(String userId, Date from, Date to) {
-        List<Transaction> transactions = reportRepository.findByUserIdAndTxnDateBetween(userId, from, to);
+    public Report getReportInDates(String userId, OffsetDateTime from, OffsetDateTime to) {
+        // Convert OffsetDateTime to Date if needed for repository query
+        Date fromDate = java.sql.Timestamp.valueOf(from.toLocalDateTime());
+        Date toDate = java.sql.Timestamp.valueOf(to.toLocalDateTime());
+
+        List<Transaction> transactions = reportRepository.findByUserIdAndTxnDateBetween(userId, fromDate, toDate);
         ReportDTO reportDTO = createReportDTO(transactions);
 
         return convertToReport(reportDTO);
@@ -54,7 +61,6 @@ public class ReportService implements IReportService {
                 .mapToDouble(Transaction::getTxnAmount)
                 .sum());
         reportDTO.setNetFlow(reportDTO.getTotalCreditAmount() - reportDTO.getTotalDebitAmount());
-
 
         return reportDTO;
     }

@@ -6,6 +6,7 @@ import com.kiranaservices.kirana_transactions.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,13 +27,19 @@ public class TransactionService implements ITransactionService {
         txn.setTxnId(txnDTO.getTxnId());
 
         // If the currency is not INR, convert the amount to INR
-        System.out.println(txnDTO);
         double convertedAmount = txnDTO.getCurrencyType().getCurrencyCode().equals("INR")
                 ? txnDTO.getTxnAmount()
                 : currencyConversionService.convertToINR(txnDTO.getCurrencyType().getCurrencyCode(), txnDTO.getTxnAmount());
 
         txn.setTxnAmount(convertedAmount);
-        txn.setTxnDate(txnDTO.getTxnDate());
+
+        // Set txnDate to current date if not provided
+        if (txnDTO.getTxnDate() == null) {
+            txn.setTxnDate(new Date());
+        } else {
+            txn.setTxnDate(txnDTO.getTxnDate());
+        }
+
         txn.setCurrencyType(txnDTO.getCurrencyType());
         txn.setUserId(txnDTO.getUserId());
         txn.setTxnType(txnDTO.getTxnType());

@@ -1,12 +1,14 @@
 package com.kiranaservices.kirana_transactions.controller;
 
-import com.kiranaservices.kirana_transactions.dto.ReportDTO;
-import com.kiranaservices.kirana_transactions.enums.TransactionType;
 import com.kiranaservices.kirana_transactions.model.Report;
 import com.kiranaservices.kirana_transactions.service.IReportService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @RestController
 @RequestMapping("/api/report")
@@ -20,16 +22,15 @@ public class ReportController {
     @GetMapping("/onPeriod")
     public Report getReportOnPeriod(
             @RequestParam String userId,
-            @RequestParam TransactionType type,
             @RequestParam String period) {
-        return reportService.getReportOnPeriod(userId, type, period);
+        return reportService.getReportOnPeriod(userId, period);
     }
 
     @GetMapping("/inDates")
     public Report getReportInDates(
             @RequestParam String userId,
-            @RequestParam Date from,
-            @RequestParam Date to) {
-        return  reportService.getReportInDates(userId, from, to);
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime to) {
+        return reportService.getReportInDates(userId, from, to);
     }
 }
